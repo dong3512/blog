@@ -6,7 +6,6 @@ import com.blog.request.PostCreate;
 import com.blog.request.PostEdit;
 import com.blog.request.PostSearch;
 import com.blog.response.PostResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -111,7 +110,7 @@ class PostServiceTest {
 
         PostEdit postEdit = PostEdit.builder()
                 .title("서채연")
-                .content("동인여자친구")
+                .content("채연남자친구")
                 .build();
 
         // when
@@ -120,7 +119,60 @@ class PostServiceTest {
         // then
         Post changePost = postRepository.findById(post.getId())
                 .orElseThrow( () -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
-        Assertions.assertEquals("서채연" , changePost.getTitle());
+        assertEquals("서채연" , changePost.getTitle());
+        assertEquals("채연남자친구" , changePost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test5() {
+        // given
+        Post post = Post.builder()
+                .title("동인이")
+                .content("채연남자친구")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("동인이")
+                .content("천하제일멋쟁이")
+                .build();
+
+        // when
+        postService.edit(post.getId() , postEdit);
+
+        // then
+        Post changePost = postRepository.findById(post.getId())
+                .orElseThrow( () -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        assertEquals("동인이" , changePost.getTitle());
+        assertEquals("천하제일멋쟁이" , changePost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test10() {
+        // given
+        Post post = Post.builder()
+                .title("동인이")
+                .content("채연남자친구")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title(null)
+                .content("천하제일멋쟁이")
+                .build();
+
+        // when
+        postService.edit(post.getId() , postEdit);
+
+        // then
+        Post changePost = postRepository.findById(post.getId())
+                .orElseThrow( () -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        assertEquals("동인이" , changePost.getTitle());
+        assertEquals("천하제일멋쟁이" , changePost.getContent());
     }
 
 }

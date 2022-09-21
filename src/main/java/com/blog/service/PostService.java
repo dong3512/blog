@@ -60,7 +60,5 @@ public class PostService {
                 .build();
 
         post.edit(postEditor);
-
-
     }
 }
