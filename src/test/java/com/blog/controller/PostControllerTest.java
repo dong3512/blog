@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -20,10 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -57,7 +56,7 @@ class PostControllerTest {
 
         //expected
         mockMvc.perform(post("/posts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                         .content(json)
                 )
                 .andExpect(status().isOk())
@@ -77,7 +76,7 @@ class PostControllerTest {
 
         //expected
         mockMvc.perform(post("/posts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(json)
         )
                 .andExpect(status().isBadRequest())
@@ -100,7 +99,7 @@ class PostControllerTest {
 
         //when
         mockMvc.perform(post("/posts")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(json)
                 )
                 .andExpect(status().isOk())
@@ -126,7 +125,7 @@ class PostControllerTest {
 
         // expected
         mockMvc.perform(get("/posts/{postId}", post.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("1234567890"))
@@ -148,7 +147,7 @@ class PostControllerTest {
 
         // expected
         mockMvc.perform(get("/posts?page=1&size=10")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()" , Matchers.is(10)))
                 .andExpect(jsonPath("$[0].title").value("foo19"))
@@ -170,7 +169,7 @@ class PostControllerTest {
 
         // expected
         mockMvc.perform(get("/posts?page=0&size=10")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()" , Matchers.is(10)))
                 .andExpect(jsonPath("$[0].title").value("foo19"))
@@ -186,7 +185,6 @@ class PostControllerTest {
                 .title("동인이")
                 .content("채연남자친구")
                 .build();
-
         postRepository.save(post);
 
         PostEdit postEdit = PostEdit.builder()
@@ -196,8 +194,25 @@ class PostControllerTest {
 
         // expected
         mockMvc.perform(patch("/posts/{postId}", post.getId())
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postEdit)))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void test8() throws Exception {
+        // given
+        Post post = Post.builder()
+                .title("동인이")
+                .content("채연남자친구")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        mockMvc.perform(delete("/posts/{postId}" , post.getId())
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

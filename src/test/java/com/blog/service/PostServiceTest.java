@@ -150,6 +150,23 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("게시글 삭제")
+    void test6() {
+        // given
+        Post post = Post.builder()
+                .title("동인이")
+                .content("채연남자친구")
+                .build();
+
+        postRepository.save(post);
+
+        // whenl
+        postService.delete(post.getId());
+
+        // then
+        assertEquals(0,postRepository.count());
+    }
+    @Test
     @DisplayName("글 내용 수정")
     void test10() {
         // given
