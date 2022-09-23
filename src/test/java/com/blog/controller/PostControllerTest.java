@@ -200,6 +200,7 @@ class PostControllerTest {
                 .andDo(print());
     }
 
+    
     @Test
     @DisplayName("게시글 삭제")
     void test8() throws Exception {
