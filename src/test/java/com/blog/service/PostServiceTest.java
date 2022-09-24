@@ -1,6 +1,7 @@
 package com.blog.service;
 
 import com.blog.domain.Post;
+import com.blog.exception.PostNotFound;
 import com.blog.repository.PostRepository;
 import com.blog.request.PostCreate;
 import com.blog.request.PostEdit;
@@ -16,8 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostServiceTest {
@@ -166,6 +166,64 @@ class PostServiceTest {
         // then
         assertEquals(0,postRepository.count());
     }
+
+    @Test
+    @DisplayName("글 1개 조회 - 존재하지 않는 글")
+    void test7() {
+        // given
+        Post post = Post.builder()
+                .title("호돌맨")
+                .content("반포자이")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class , () -> {
+            postService.get(post.getId() + 1);
+        });
+
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 - 존재하지 않는 글")
+    void test8() {
+        // given
+        Post post = Post.builder()
+                .title("동인이")
+                .content("채연남자친구")
+                .build();
+
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class , () -> {
+            postService.get(post.getId() + 1);
+        });
+    }
+
+    @Test
+    @DisplayName("글 내용 수정 - 존재하지 않는 글")
+    void test9() {
+        // given
+        Post post = Post.builder()
+                .title("동인이")
+                .content("채연남자친구")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("동인이")
+                .content("천하제일멋쟁이")
+                .build();
+
+        // expected
+        assertThrows(PostNotFound.class , () -> {
+            postService.edit(post.getId() + 1 , postEdit);
+        });
+
+    }
+
     @Test
     @DisplayName("글 내용 수정")
     void test10() {
@@ -191,5 +249,6 @@ class PostServiceTest {
         assertEquals("동인이" , changePost.getTitle());
         assertEquals("천하제일멋쟁이" , changePost.getContent());
     }
+
 
 }
