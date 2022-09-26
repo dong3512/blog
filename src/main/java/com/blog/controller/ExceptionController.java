@@ -1,6 +1,6 @@
 package com.blog.controller;
 
-import com.blog.exception.PostNotFound;
+import com.blog.exception.BlogException;
 import com.blog.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,14 +32,16 @@ public class ExceptionController {
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(PostNotFound.class)
-    public ErrorResponse postNotFound(PostNotFound e) {
+    @ExceptionHandler(BlogException.class)
+    public ErrorResponse blogException(BlogException e) {
+        int statusCode = e.getSatatusCode();
+
         ErrorResponse response = ErrorResponse.builder()
-                .code("404")
+                .code(String.valueOf(statusCode))
                 .message(e.getMessage())
                 .build();
 
         return response;
     }
+
 }

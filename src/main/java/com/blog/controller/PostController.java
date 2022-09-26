@@ -1,5 +1,6 @@
 package com.blog.controller;
 
+import com.blog.exception.InvalidRequest;
 import com.blog.request.PostCreate;
 import com.blog.request.PostEdit;
 import com.blog.request.PostSearch;
@@ -21,6 +22,9 @@ public class PostController {
 
     @PostMapping("/posts")
     public void  post(@RequestBody @Valid PostCreate request ){
+        if(request.getTitle().contains("바보")){
+            throw new InvalidRequest();
+        }
         postService.write(request);
     }
 
