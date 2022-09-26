@@ -260,7 +260,7 @@ class PostControllerTest {
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 }
