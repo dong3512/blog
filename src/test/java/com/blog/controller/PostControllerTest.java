@@ -86,7 +86,6 @@ class PostControllerTest {
 //                .andDo(print());
 //    }
 
-
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
     void test3() throws Exception {
