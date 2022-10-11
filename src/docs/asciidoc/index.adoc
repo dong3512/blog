@@ -18,5 +18,4 @@ include::{snippets}/index/response-fields.adoc[]
 
 === CURL
 
-
 include::{snippets}/index/curl-request.adoc[]
