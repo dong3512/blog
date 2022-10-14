@@ -20,6 +20,7 @@ include::{snippets}/post-inquiry/response-fields.adoc[]
 
 === 요청
 
+
 include::{snippets}/post-create/http-request.adoc[]
 
 include::{snippets}/post-create/request-fields.adoc[]
